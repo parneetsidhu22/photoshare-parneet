@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% include 'navbar.html' %}
+    
+    <div class="home-body">
+        <div class="image-section">
+            <div class="image-header">
+                <img src="{{img}}" alt="profile_image" class="profile-image" />
+                <h3>{{name}}</h3>
+            </div>
+            <img 
+            src="https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg" 
+            alt="img">
+            <div class="image-bottom">
+                <!--<div class="icon"><i class="fa fa-heart"></i></div>-->
+                <div class="icon"><i class="fa fa-heart-o"></i></div>
+                <div class="icon"><i class="fa fa-comment-o"></i></div>
+            </div>
+        </div>
+        <div class="right-section">
+            <div class="profile-section">
+                <img src="{{img}}" alt="profile_image" class="profile-image" />
+                <div class="info">
+                    <span class="username">{{ username }}</span>
+                    <span class="name">{{name}}</span>
+                    <span class="setting">
+                        <a href="/user_authentication/logout/">Sign out</a>
+                    </span>
+                </div>
+            </div>
+            <div class="right-info-container">
+                <div class="followers">
+                    <span>Followers</span>
+                    <span class="number">250</span>
+                </div>
+                <div class="posts">
+                    <span>Posts</span>
+                    <span class="number">80</span>
+                </div>
+                <div class="following">
+                    <span>Following</span>
+                    <span class="number">80</span>
+                </div>
+                <div class="right-setting-container">
+                    <div class="setting-container">
+                        <a href="/user_authentication/settings/">Settings <i class="fa fa-gear"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            
+
+        </div>
+        
+    </div>
+    
+{% endblock %}

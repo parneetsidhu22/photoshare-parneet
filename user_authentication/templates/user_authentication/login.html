@@ -1,0 +1,52 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    
+    <div class="authentication-body flex">
+        <div class="authentication-body-left">
+            <div class="logo-container">
+                <div>
+                    <img src="{% static 'images/logo-full.png' %}" alt="logo" class="logo">
+                </div>
+                
+                <div class="logo-description">
+                    <p>Photoshare helps to share your images with your friends and relatives.</p>
+                </div>
+            </div>
+            
+            
+        </div>
+
+        <div class="authentication-body-right">
+            <div class="card">
+                <form action="" method="POST">
+                    <div class="input-group">
+                        <input type="text" placeholder="Username" name="username" {% if errors %} style="border: solid 1px #ce0909;" {% endif %} value="{{ username }}">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Password" name="password" {% if errors %} style="border: solid 1px #ce0909;" {% endif %}>
+                    </div>
+                    <div class="login-error-msg">
+                        {% for message in messages %}
+                            {% if message.extra_tags == "authentication_error" %}
+                                <span>*{{ message }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="submit-group">
+                        {% csrf_token %}
+                        <input type="submit" value="Submit">
+                    </div>
+                    <div class="hr_line"></div>
+                    <div class="login-register-btn">
+                            <a href="/user_authentication/register">Register</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

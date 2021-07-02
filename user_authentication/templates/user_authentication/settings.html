@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="settings-container">
+        <div class="left-settings-profile">
+            <img src="{% static 'images/profile-img.png' %}" alt="profile image">
+            <form action="" method="POST">
+                <button>Change Image</button>
+            </form>
+        </div>
+        <div class="information-container">
+            <div class="info-group">
+                <span class="title">Name: </span>
+                <span class="result">{{name}}</span>
+            </div>
+            <div class="info-group">
+                <span class="title">Username: </span>
+                <span class="result">{{username}}</span>
+            </div>
+            <div class="info-group">
+                <span class="title">Email: </span>
+                <span class="result">{{email}}</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

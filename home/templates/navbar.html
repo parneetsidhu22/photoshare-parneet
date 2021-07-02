@@ -1,0 +1,19 @@
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<nav>
+    <div>
+        <div class="logo-left">
+            <img src="{% static 'images/logo-full.png' %}" alt="logo" class="logo">
+        </div>
+
+        <div class="form-right">
+            <form action="" method="POST">
+                <input type="text" placeholder="Search">
+                {% csrf_token %}
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+            
+        </div>
+    </div>
+    
+</nav>
