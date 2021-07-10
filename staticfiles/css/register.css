@@ -1,0 +1,162 @@
+
+
+/************ Register ************/
+
+.register-card{
+    display:flex;
+    justify-content: center;
+    margin-top:20vh;
+}
+
+.register-card > .register-content{
+    border:solid 1px #b2b2b3;
+    width:500px;
+    min-height:400px;
+    background-color:#fff;
+    border-radius:6px;
+    padding:20px;
+
+}
+
+/*
+.register-content .logo{
+    font-size:30px;
+    line-height:0.1em;
+}*/
+
+.register-logo{
+    height:40px;
+}
+
+.register-content .register-description {
+    font-size:25px;
+}
+
+.register-content form{
+    display:flex;
+    justify-content: center;
+}
+
+.group-register-input{
+    display:flex;
+    -webkit-appearance: none;
+}
+
+.register-input input{
+    width:445px;
+    font-size:17px;
+    padding:4px 10px;
+    outline:none;
+    margin:10px;
+    line-height:16px;
+    border: solid 1px #b2b2b3;
+    border-radius:4px;
+    -webkit-appearance: none;
+}
+
+.group-register-input .input-small{
+    width:200px;
+    -webkit-appearance: none;
+    
+}
+
+.register-buttons{
+    margin-top:40px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+ 
+.register-buttons a{
+    text-decoration:none;
+    font-size:17px;
+    color:#1a73e8;
+    padding:10px;
+}
+
+.register-buttons a:hover{
+    background-color:rgba(28, 116, 233,.1);
+}
+
+.register-buttons a span{
+    font-weight:500;
+}
+
+.register-buttons input[type="submit"]{
+    padding:10px 5px;
+    font-size:17px;
+    width:100px;
+    border:none;
+    background-color:#1a73e8;
+    color:#fff;
+    border-radius:6px;
+    cursor:pointer;
+    -webkit-appearance: none;
+}
+
+.register-error-msg{
+    display:flex;
+    flex-direction: column;
+    margin-left:15px;
+}
+
+.register-error-msg span{
+    color:#ce0909;
+}
+
+.register-input .error-field,
+.group-register-input .register-input .error-field,
+.error-field{
+    border: solid 1px #ce0909;
+}
+
+@media screen and (max-width: 600px){
+    .register-card > .register-content{
+        background-color: var(--background-color);
+        border:none;
+    }
+
+    .form-content{
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .group-register-input{
+        flex-direction: column;
+    }
+    .group-register-input .input-small{
+        width:90%;
+    }
+
+    .register-input input{
+        width:90%;
+    }
+
+    .register-content .logo{
+        display:flex;
+        justify-content: center;
+    }
+
+    .register-content .register-description {
+        text-align: center;
+    }
+
+    .register-card{
+        margin-top:5vh;
+    }
+
+    .register-input input{
+        margin:10px 0px;
+    }
+
+    .register-buttons div{
+        padding:10px;
+    }
+}
+
+@media screen and (max-width: 330px){
+    .hide-content{
+        display:none;
+    }
+}
