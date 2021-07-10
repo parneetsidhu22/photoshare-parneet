@@ -170,7 +170,7 @@
             var diff = -((Math.floor( $(window).scrollTop())) - (Math.floor( $(document).height() - $(window).height() )))
             //console.log(Math.floor( $(window).scrollTop() ))
             //console.log($(document).height() - $(window).height())
-            if(diff <= 5 && diff >= 0) {
+            if(diff <= 25 && diff >= 0) {
                 var response = '';
                 $.ajax({
                 type: "POST",
