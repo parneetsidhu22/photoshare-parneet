@@ -7,9 +7,8 @@
         </div>
 
         <div class="form-right">
-            <form action="" method="POST">
-                <input type="text" placeholder="Search">
-                {% csrf_token %}
+            <form action="/add-friend/" method="GET">
+                <input type="text" placeholder="Search a friend..." name="q" value="{{q}}">
                 <button type="submit"><i class="fa fa-search"></i></button>
             </form>
             

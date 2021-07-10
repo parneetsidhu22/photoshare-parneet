@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
     {% include 'navbar.html' %}
-    
     <div class="home-body">
-        <div class="image-section">
-            <div class="image-header">
-                <img src="{{img}}" alt="profile_image" class="profile-image" />
-                <h3>{{name}}</h3>
+        <div id="image-section">
+            <!--
+            <div class="image-section">
+                <div class="image-header">
+                    <img src="{{img}}" alt="profile_image" class="profile-image" />
+                    <h3>{{name}}</h3>
+                </div>
+                <img 
+                src="https://res.cloudinary.com/parneetsingh/image/upload/v1/{{post.image}}" 
+                alt="img">
+                <div class="image-bottom">
+                    <div class="icon"><i class="fa fa-heart"></i></div>
+                    <div class="icon"><i class="fa fa-heart-o"></i> {{ post.likes }}</div>
+                    <div class="icon icon-active"><i class="fa fa-comment-o"></i></div>
+                </div>
             </div>
-            <img 
-            src="https://static.remove.bg/remove-bg-web/8be32deab801c5299982a503e82b025fee233bd0/assets/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg" 
-            alt="img">
-            <div class="image-bottom">
-                <!--<div class="icon"><i class="fa fa-heart"></i></div>-->
-                <div class="icon"><i class="fa fa-heart-o"></i></div>
-                <div class="icon"><i class="fa fa-comment-o"></i></div>
-            </div>
+            -->
         </div>
+        
         <div class="right-section">
             <div class="profile-section">
                 <img src="{{img}}" alt="profile_image" class="profile-image" />
@@ -29,29 +33,171 @@
                 </div>
             </div>
             <div class="right-info-container">
-                <div class="followers">
-                    <span>Followers</span>
-                    <span class="number">250</span>
-                </div>
                 <div class="posts">
                     <span>Posts</span>
-                    <span class="number">80</span>
+                    <span class="number">{{total_posts}}</span>
                 </div>
-                <div class="following">
+                <div class="followers clickable">
+                    <span>Followers</span>
+                    <span class="number">{{total_followers}}</span>
+                </div>
+                <div class="following clickable">
                     <span>Following</span>
-                    <span class="number">80</span>
+                    <span class="number">{{total_followings}}</span>
                 </div>
-                <div class="right-setting-container">
-                    <div class="setting-container">
-                        <a href="/user_authentication/settings/">Settings <i class="fa fa-gear"></i></a>
+                {% if total_requests > 0 %}
+                    <div class="friend-request clickable" onclick="window.open('/friend_requests/','_self')">
+                        <span>Friend Requests</span>
+                        <span class="number">{{total_requests}}</span>
+                    </div>
+                    <style>
+                        .right-info-container{
+                            height:400px;
+                        }
+
+                        .following{
+                            border-bottom:1px solid rgb(216, 216, 216);
+                        }
+                    </style>
+                {% endif %}
+                <div id="btns-grid">
+                    <div class="right-btn-container">
+                        <div class="btn-container">
+                            <a href="/user_authentication/settings/" class="settings"><i class="fa fa-gear"></i> Settings</a>
+                        </div>
+                    </div>
+                    <div class="right-btn-container">
+                        <div class="btn-container">
+                            <form action="" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="file" onchange="form.submit()"  id="selectedFile" style="display: none;" name="image" />
+                                <a onclick="document.getElementById('selectedFile').click();" class="select-image"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> Create a post</i></a>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-
             
-
         </div>
         
     </div>
-    
+    <script>
+        if ( window.history.replaceState ) {
+          window.history.replaceState( null, null, window.location.href );
+        }
+
+        function likeButton(post_id){
+            $.ajax({
+                type: "POST",
+                url: "/like_post/",
+                async: false,
+                headers:{'X-CSRFToken': csrftoken},
+                data: {post_id:post_id},
+                
+                success: function(text) {
+                    var heart = document.getElementById(`icon-${post_id}`)
+                    var likes = document.getElementById(`likes-${post_id}`)
+                    var likes_text = parseInt(likes.textContent)
+                    if(heart.classList['value'] == 'fa fa-heart'){
+                        heart.classList = ['fa fa-heart-o'];
+                        likes.innerHTML = (likes_text - 1).toString()
+                    }else{
+                        heart.classList = ['fa fa-heart'];
+                        likes.innerHTML = (likes_text + 1).toString()
+                    }
+                    
+                }
+            });
+        }
+
+
+        var start = 0;
+        var end = 3;
+
+        var image_section = document.getElementById("image-section");
+        function getDisplayText(post_id,name,image,likes,profile_image,liked){
+            return `
+            <div class="image-section">
+                <div class="image-header">
+                    <img src="${profile_image}" alt="profile_image" class="profile-image" />
+                    <h3>${name}</h3>
+                </div>
+                <img 
+                src="${image}" 
+                alt="img">
+                <div class="image-bottom">
+                    <!--<div class="icon"><i class="fa fa-heart"></i></div>-->
+                    <div class="icon" onclick="likeButton('${post_id}')"><i class="${liked}" id='icon-${post_id}'></i> <span id="likes-${post_id}">${likes}</span> </div>
+                    <div class="icon icon-active"><i class="fa fa-comment-o"></i></div>
+                </div>
+            </div>
+            `
+        }
+
+        $(document).ready(function() { 
+            var response = '';
+            $.ajax({
+                type: "POST",
+                url: "/post_data/",
+                async: false,
+                headers:{'X-CSRFToken': csrftoken},
+                data: {},
+                
+                success: function(text) {
+                    response = text.slice(start,end);
+                    console.log(response)
+                    for(i = 0; i < response.length;i ++){
+                        image_section.innerHTML += getDisplayText(
+                            response[i].post_id,
+                            response[i].name,
+                            response[i].image,
+                            response[i].likes,
+                            response[i].profile_img,
+                            response[i].liked
+                        )
+                    }
+                    
+                    start = end
+                    end = end + 3
+                }
+            });
+        });
+
+        
+        $(window).scroll(onScroll);
+        $('body').on('touchmove', onScroll);
+        function onScroll() {
+            var diff = -((Math.floor( $(window).scrollTop())) - (Math.floor( $(document).height() - $(window).height() )))
+            //console.log(Math.floor( $(window).scrollTop() ))
+            //console.log($(document).height() - $(window).height())
+            if(diff <= 5 && diff >= 0) {
+                var response = '';
+                $.ajax({
+                type: "POST",
+                url: "/post_data/",
+                async: false,
+                headers:{'X-CSRFToken': csrftoken},
+                data: {},
+                success: function(text) {
+                    response = text.slice(start,end);
+                    console.log(response)
+                    for(i = 0; i < response.length;i ++){
+                        image_section.innerHTML += getDisplayText(
+                            response[i].post_id,
+                            response[i].name,
+                            response[i].image,
+                            response[i].likes,
+                            response[i].profile_img,
+                            response[i].liked
+                        )
+                    }
+                    
+                    start = end
+                    end = end + 3
+                }
+            });
+                
+            }
+        }
+        </script>
 {% endblock %}

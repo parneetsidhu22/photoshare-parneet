@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'navbar.html' %}
+
+
+<div class="friend-body">
+    <div class="friend-list-container">
+        {% for element,profile in requests %}
+        <div class="friend" id="{{element.username}}">
+            <div class="profile">
+                <img src="{{profile.image}}" alt="profile_image" class="profile-image" />
+                <div class="name">
+                    <h3>{{element.first_name}} {{element.last_name}}</h3>
+                    <p>{{element.username}}</p>
+                </div>
+            </div>
+            <div class="btn-friend" style="display:flex;">  
+                {% csrf_token %}
+                <button class="follow_btn" onclick="accept_reject('{{element.username }}','accept')" id="{{result.username}}_accept">Accept</button>
+                <button class="unfollow_btn" onclick="accept_reject('{{element.username }}','reject')" id="{{result.username}}_reject" style="margin:auto 10px;">Reject</button>
+            </div>
+        </div>
+        {% endfor %}
+    
+    </div>
+</div>
+
+<script>
+    function accept_reject(username,method){
+        var friend = document.getElementById(username);
+        friend.style.display = "none";
+
+        $.ajax({
+            type: "POST",
+            url: "",
+            headers:{'X-CSRFToken': csrftoken},
+            data: {"method":method,"follower":username}
+        });
+    }
+</script>
+
+{% endblock %}

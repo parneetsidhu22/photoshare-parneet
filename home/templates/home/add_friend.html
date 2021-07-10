@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'navbar.html' %}
+
+
+<div class="friend-body">
+    <div class="friend-list-container">
+        {% for element,profile in followed %}
+        <div class="friend">
+            <div class="profile">
+                <img src="{{profile.image}}" alt="profile_image" class="profile-image" />
+                <div class="name">
+                    <h3>{{element.first_name}} {{element.last_name}}</h3>
+                    <p>{{element.username}}</p>
+                </div>
+            </div>
+            <div class="btn-friend">
+                <button class="follow_btn" onclick="follow( '{{element.username}}' )" id="{{element.username}}_follow" style="display:none">Follow</button>
+                <button class="unfollow_btn" onclick="unfollow('{{element.username}}')" id="{{element.username}}_unfollow">Unfollow</button>
+            </div>
+        </div>
+        {% endfor %}
+
+
+
+
+
+        {% for result,profile in information %}
+        <div class="friend">
+            <div class="profile">
+                <img src="{{profile.image}}" alt="profile_image" class="profile-image" />
+                <div class="name">
+                    <h3>{{result.first_name}} {{result.last_name}}</h3>
+                    <p>{{result.username}}</p>
+                </div>
+            </div>
+            <div class="btn-friend">  
+                {% csrf_token %}
+                <button class="follow_btn" onclick="follow( '{{result.username }}' )" id="{{result.username}}_follow">Follow</button>
+                <button class="unfollow_btn" onclick="unfollow( '{{result.username }}' )" id="{{result.username}}_unfollow" style="display:none">Unfollow</button>
+        </div>
+        {% endfor %}
+        
+    </div>
+</div>
+
+
+<div class="success" id="success">
+    <div class="content">
+        Friend request has been sent.
+    </div>
+</div>
+
+
+<script>
+        function follow(value) {
+            var follow_btn = document.getElementById(value + "_follow");
+            var unfollow_btn = document.getElementById(value + "_unfollow");
+            //print(value + "-follow")
+
+            follow_btn.style.display = "none";
+            unfollow_btn.style.display = "block";
+
+            $.ajax({
+                type: "POST",
+                url: "/add-friend/",
+                headers:{'X-CSRFToken': csrftoken},
+                data: {"method":"follow","followed":value}
+            });
+
+            var success = document.getElementById("success");
+            setTimeout(function(){
+                success.style.display = "block";
+
+            }, 1000)
+            
+            setTimeout(function(){
+                success.style.display = "none";
+            }, 5000)
+        }
+    function unfollow(value) {
+        var follow_btn = document.getElementById(value + "_follow");
+        var unfollow_btn = document.getElementById(value + "_unfollow");
+        console.log(value)
+        //print(value + "-follow")
+
+        follow_btn.style.display = "block";
+        unfollow_btn.style.display = "none";
+
+        $.ajax({
+            type: "POST",
+            url: "/friend_requests/",
+            headers:{'X-CSRFToken': csrftoken},
+            data: {"method":"unfollow","follower":value}
+        });
+    }
+
+</script>
+
+{% endblock %}
