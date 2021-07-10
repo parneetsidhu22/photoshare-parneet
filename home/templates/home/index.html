@@ -136,6 +136,7 @@
 
         $(document).ready(function() { 
             var response = '';
+            console.log($(document).height() - $(window).height())
             $.ajax({
                 type: "POST",
                 url: "/post_data/",
@@ -145,7 +146,7 @@
                 
                 success: function(text) {
                     response = text.slice(start,end);
-                    console.log(response)
+                    //console.log(response)
                     for(i = 0; i < response.length;i ++){
                         image_section.innerHTML += getDisplayText(
                             response[i].post_id,
@@ -169,8 +170,8 @@
         function onScroll() {
             var diff = -((Math.floor( $(window).scrollTop())) - (Math.floor( $(document).height() - $(window).height() )))
             //console.log(Math.floor( $(window).scrollTop() ))
-            //console.log($(document).height() - $(window).height())
-            if(diff <= 25 && diff >= 0) {
+            console.log(diff)
+            if(diff <= 300) {
                 var response = '';
                 $.ajax({
                 type: "POST",
