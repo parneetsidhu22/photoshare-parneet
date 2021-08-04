@@ -160,7 +160,7 @@ def settingspage(request):
                 profile.private = True
             
             profile.save()
-            return HttpResponse(json.dumps({"status":200}), content_type="application/json")\
+            return HttpResponse(json.dumps({"status":200}), content_type="application/json")
 
         elif process_type == "disable":
             if profile.disabled:
@@ -215,4 +215,4 @@ def settingspage(request):
         'page_type':'settings'
     }
     
-    return render(request,'user_authentication\settings.html',context=context)
+    return render(request,'user_authentication/settings.html',context=context)
