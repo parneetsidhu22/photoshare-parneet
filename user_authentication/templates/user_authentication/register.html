@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="register-input">
-                    <input type="text" placeholder="Username" name="username" value="{{ username }}" 
+                    <input type="text" placeholder="Username" autocapitalize="off" name="username" value="{{ username }}" 
                     {% if username_error %}style=" border: solid 1px #ce0909; "{% endif %} required>
                     <div class="register-error-msg">
                         {% for message in messages %}

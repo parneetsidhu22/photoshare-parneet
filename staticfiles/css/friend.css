@@ -32,6 +32,12 @@
     margin-left:20px;
 }
 
+.friend-body .friend .profile .name p{
+    margin-top:3px;
+    margin-left:3px;
+    color:#5a5a5a;
+} 
+
 .btn-friend button{
     padding:10px;
     width:100px;
@@ -75,3 +81,52 @@
     cursor:pointer;
     display:none;
 }
+
+@media screen and (max-width:660px){
+    .friend-body .friend{
+        width:500px; 
+    }
+}
+
+@media screen and (max-width:554px){
+    .friend-list-container .friend{
+        padding:20px 0px;
+        width:280px;
+        height:150px;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .btn-friend button{
+        margin:20px;
+    }
+}
+
+/*
+@media screen and (max-width:450px){
+    .friend-body .friend .profile img{
+        width:40px;
+        height:40px;
+    }
+
+    .friend-body .friend .profile .name h3{
+        font-size:18px;
+    }
+
+
+    .btn-friend button{
+        margin:20px;
+    }
+}*/
+/*
+@media screen and (max-width:350px){
+    .friend-body .friend{
+        width:300px;
+    }
+
+    .btn-friend button{
+        margin:20px;
+    }
+}*/

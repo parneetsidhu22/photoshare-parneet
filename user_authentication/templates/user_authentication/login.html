@@ -23,7 +23,7 @@
             <div class="card">
                 <form action="" method="POST">
                     <div class="input-group">
-                        <input type="text" placeholder="Username" name="username" {% if errors %} style="border: solid 1px #ce0909;" {% endif %} value="{{ username }}">
+                        <input type="text" autocapitalize="off" placeholder="Username" name="username" {% if errors %} style="border: solid 1px #ce0909;" {% endif %} value="{{ username }}">
                     </div>
                     <div class="input-group">
                         <input type="password" placeholder="Password" name="password" {% if errors %} style="border: solid 1px #ce0909;" {% endif %}>

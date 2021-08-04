@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+
+
+    <style>
+        .gallery-body{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-bottom:80px;
+        }
+
+        .gallery-images{
+            display:grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            margin-top:20px;
+        }
+
+        .gallery-images img{
+            object-fit: cover;
+            width:254px;
+            height:254px;
+            padding:10px;
+            cursor:pointer;
+        }
+
+        .gallery-heading{
+            border-bottom:solid 1px #d4d4d4;
+            display: flex;
+            
+            width:805px;
+            height:250px;
+            margin-top:60px;
+        }
+
+        .gallery-heading .profile-img img{
+            width:150px;
+            height:150px;
+            object-fit: cover;
+            border-radius:999px;
+        }
+
+        .gallery-heading .information{
+            margin-left:60px;
+            margin-top:33px;
+        }
+
+        .gallery-heading .information .name p{
+            font-size:35px;
+        }
+
+        .gallery-heading .information .about{
+            display:flex;
+        }
+
+        .gallery-heading .information .about p{
+            padding:10px;
+            cursor: pointer;
+            font-size:18px;
+        }
+        
+        .gallery-heading .information .about p:first-child{
+            padding-left:0;
+            cursor:auto;
+        }
+
+        @media screen and (max-width:835px) {
+            .gallery-images img{
+                width:200px;
+                height:200px;
+            }
+
+            .gallery-heading{
+                width:650px;
+            }
+        }
+
+        @media screen and (max-width:675px) {
+            .gallery-images img{
+                width:225px;
+                height:225px;
+            }
+
+            .gallery-heading{
+                width:480px;
+            }
+
+            .gallery-images{
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media screen and (max-width:531px) {
+            .gallery-heading .profile-img img{
+                height: 80px;
+                width:80px;
+                margin-top:15px;
+            }
+            .gallery-images img{
+                width:93%;
+                height:auto;
+                object-fit: cover;
+            }
+
+            .gallery-heading{
+                width:95%;
+                position: relative;
+                height:180px;
+            }
+
+            .gallery-images{
+                grid-template-columns: 1fr;
+
+            }
+
+            .gallery-heading .information .about{
+                position:absolute;
+                bottom:0;
+                left:13%;
+            }
+
+            
+
+
+            .gallery-heading .information .name p{
+                font-size:30px;
+            }
+
+            .gallery-heading .information{
+                margin-left:20px
+            }
+
+        }
+
+        .nopost{
+            width:100%;
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content:center;
+            margin-top:60px;
+            color:#5c5858;
+            font-size:25px;
+            margin-bottom:200px;
+        }
+
+        .nopost .icon{
+            font-size:50px;
+        }
+
+    </style>
+
+    
+<div class="gallery-body">
+    <div class="gallery-heading">
+        <div class="profile-img">
+            <img src="{{profile_img}}" alt="profile image">
+        </div>
+        <div class="information">
+            <div class="name">
+                <p>{{user.first_name}} {{user.last_name}}</p>
+            </div>
+            <div class="about">
+                <p><b>{{posts}}</b> Posts</p>
+                <p><b>{{followers}}</b> Followers</p>
+                <p><b>{{followings}}</b> Following</p>
+            </div>
+        </div>
+    </div>
+    {% if showPrivate %}
+        <div class="nopost">
+            <div class="icon">
+                <i class="fas fa-lock"></i>
+            </div><br>
+            <p>This account is private</p>
+        </div>
+    {% elif posts == 0 %}
+        <div class="nopost">
+            <div class="icon">
+                <i class="fas fa-images"></i>
+            </div><br>
+            <p>No posts yet</p>
+        </div>
+    {% else %}
+    <div class="gallery-images">
+        
+        {% for image in images %}
+            <img src="{{image}}" alt="{{image}}" class="post-image">
+        {% endfor %}
+    </div>   
+    {% endif %}
+    
+    
+</div>
+  
+
+
+    
+
+{% endblock %}

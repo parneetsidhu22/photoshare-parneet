@@ -9,9 +9,9 @@
         {% for element,profile in followed %}
         <div class="friend">
             <div class="profile">
-                <img src="{{profile.image}}" alt="profile_image" class="profile-image" />
+                <img src="{{profile.image.url}}" alt="profile_image" class="profile-image" />
                 <div class="name">
-                    <h3>{{element.first_name}} {{element.last_name}}</h3>
+                    <h3><a href="/gallery/?u={{element.username}}" style="color:#000;text-decoration:none;">{{element.first_name}} {{element.last_name}}</a></h3>
                     <p>{{element.username}}</p>
                 </div>
             </div>
@@ -29,9 +29,9 @@
         {% for result,profile in information %}
         <div class="friend">
             <div class="profile">
-                <img src="{{profile.image}}" alt="profile_image" class="profile-image" />
+                <img src="{{profile.image.url}}" alt="profile_image" class="profile-image" />
                 <div class="name">
-                    <h3>{{result.first_name}} {{result.last_name}}</h3>
+                    <h3><a href="/gallery/?u={{result.username}}" style="color:#000;text-decoration:none;">{{result.first_name}} {{result.last_name}}</a></h3>
                     <p>{{result.username}}</p>
                 </div>
             </div>
@@ -39,10 +39,11 @@
                 {% csrf_token %}
                 <button class="follow_btn" onclick="follow( '{{result.username }}' )" id="{{result.username}}_follow">Follow</button>
                 <button class="unfollow_btn" onclick="unfollow( '{{result.username }}' )" id="{{result.username}}_unfollow" style="display:none">Unfollow</button>
+            </div>
         </div>
         {% endfor %}
         
-    </div>
+    
 </div>
 
 

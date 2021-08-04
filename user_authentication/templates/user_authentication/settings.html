@@ -1,26 +1,517 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <div class="settings-container">
-        <div class="left-settings-profile">
-            <img src="{% static 'images/profile-img.png' %}" alt="profile image">
-            <form action="" method="POST">
-                <button>Change Image</button>
-            </form>
-        </div>
-        <div class="information-container">
-            <div class="info-group">
-                <span class="title">Name: </span>
-                <span class="result">{{name}}</span>
-            </div>
-            <div class="info-group">
-                <span class="title">Username: </span>
-                <span class="result">{{username}}</span>
-            </div>
-            <div class="info-group">
-                <span class="title">Email: </span>
-                <span class="result">{{email}}</span>
+    <style>
+        .settings-container{
+            display:flex;
+            justify-content: center;
+            margin-bottom:100px;
+            overflow-x:hidden;
+        }
+
+        .setting-options{
+            margin-top:100px;
+        }
+
+        .setting-options .option .heading{
+            background-color: #fff;
+            width:500px;
+            height:30px;
+            padding:20px;
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            border:solid 1px #dadada;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .setting-options .option .bottom{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            height:auto;
+            width:auto;
+            padding:20px;
+            border-bottom: 1px solid #dadada;
+            border-left: 1px solid #dadada;
+            border-right: 1px solid #dadada;
+        }
+
+        .setting-options .option .bottom .profile-img{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position:relative;
+            
+        }
+
+        .setting-options .option .bottom .profile-img .profile-imag-picker{
+            position: absolute;
+            color:royalblue;
+            font-weight: bold;
+            cursor:pointer;
+            width:100px;
+            height:100px;
+            border-radius:999px;
+            display:flex;
+        }
+
+        .setting-options .option .bottom .profile-img .profile-imag-picker .text{
+            position:absolute;
+            margin-top:42%;
+            margin-left:22%;
+        }
+
+        .setting-options .option .bottom .profile-img img{
+            width:100px;
+            height:100px;
+            border-radius: 999px;
+            cursor:pointer;
+            object-fit: cover;
+            opacity: .5;
+            border:solid 1px #b1b0b0;
+        }
+
+        .setting-options .option .bottom .profile-info{
+            margin-top:20px;
+        }
+
+        .info{
+            padding:10px;
+        }
+
+        .info input{
+            padding:5px;
+            font-size:17px;
+            width:300px;
+            outline:none;
+            border:1px solid #dadada;
+        }
+
+        .setting-form{
+            position:relative;
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        .setting-form .submit-btn{
+            width:100%;
+            position: relative;
+            height:30px;
+            margin-top:10px;
+        }
+
+        .setting-form .submit-btn button{
+            border:none;
+            background-color:#007bff;
+            padding:5px;
+            color:#fff;
+            font-size:17px;
+            cursor:pointer;
+            width:100px;
+            position:absolute;
+            left:10px;
+            border-radius: 8px;
+        }
+
+        .setting-form .submit-btn button:hover{
+            background-color:#0869cf;
+        }
+
+
+
+
+        @media screen and (max-width:650px){
+            .setting-options{
+                margin-top:50px;
+            }
+            .setting-options .option .heading{
+                width:350px;
+                height:25px;
+            }
+        }
+
+        @media screen and (max-width:460px){
+            .setting-options .option .heading{
+                width:300px;
+                height:20px;
+            }
+
+            .info input{
+                width:250px;
+            }
+        }
+
+        #success-toast{
+            position:fixed;
+            top:50px;
+            background-color: #038f03;
+            color:#fff;
+            padding:10px;
+            border-radius:10px;
+            display:none;
+        }
+
+        @media screen and (max-width:355px){
+            #success-toast{
+                font-size:15px;
+            }
+        }
+
+        .feedback{
+            color:#dc3545;
+            padding:10px;
+            display:None;
+        }
+
+        #delete_account_field{
+            margin-top:20px;
+            width:66%;
+            font-size:17px;
+            padding:6px;
+            outline:none;
+            border:1px solid #818181;
+        }
+
+    </style>
+
+    <div class="blur-background" id="delete-confirmation" style="display:none;">
+        <div class="delete-confirmation" style="height:290px;position:relative;">
+            <h3>Confirm Deletion</h3>
+            <p>Enter password to confirm deletion</p>
+            <input type="password" name="password" placeholder="Password" id="delete_account_field">
+            <div class="feedback" style="position:absolute;left:43px;top:143px;" id="delete-feedback">This is feedback;</div>
+            <div class="delete-confirmation-buttons">
+                <button class="btn-delete" onclick="deleteAccount(true)">Delete</button>
+                <button class="btn-dont-delete" onclick="deleteAccount(false)">Don't Delete</button>
             </div>
         </div>
     </div>
+
+
+    <div class="settings-container">
+        <div id="success-toast"></div>
+        <div class="setting-options">
+            <!----------------------->
+            <div class="option">
+                <div class="heading" onclick="bottom_open(1)">
+                    <p>Profile Setting</p>
+                    <p><i class="fas fa-chevron-right"></i></p>
+                </div>
+                <div class="bottom" style="display:none;" id="bottom-1">
+                    <form action="" method="POST" class="setting-form" id="profile-form" onsubmit="event.preventDefault();changeProfile()" enctype="multipart/form-data">
+                        <div class="profile-img">
+                            <img src="{{profile_image}}" alt="" id="pimg">
+                            <label class="profile-imag-picker">
+                                <span class="text">Change</span>
+                                <input type="file" name="profile_image" accept="image/*" onchange="changeimage()" id="profile-image-changer">
+                            </label>
+                        </div>
+                        <div class="profile-info">
+                            <div class="info">
+                                
+                                <input type="text" name="first_name" placeholder="First name" value="{{request.user.first_name}}" id="first_name" required>
+                            </div>
+    
+                            <div class="info">
+                                <input type="text" name="last_name" placeholder="Last name" value="{{request.user.last_name}}" id="last_name"  required>
+                            </div>
+    
+                            <div class="info">
+                                <input type="email" name="email" placeholder="Email" value="{{request.user.email}}" id="email" required>
+                            </div>
+                        </div>
+                        <div class="submit-btn">
+                            
+                            <input type="hidden" name="process_type" value="profile">
+                            
+                            {% csrf_token %}
+                            <button type="submit" onload="profile_btn_onload()">Update</button>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+            <!----------------------->
+
+            <!----------------------->
+            <div class="option">
+                <div class="heading" onclick="bottom_open(2)">
+                    <p>Change Password</p>
+                    <p><i class="fas fa-chevron-right"></i></p>
+                </div>
+                <div class="bottom" style="display:none;" id="bottom-2">
+                    <form action="" method="POST" id="password_change_form" class="setting-form" onsubmit="event.preventDefault();changePassword()" enctype="multipart/form-data">
+                        <div class="profile-info">
+                            <div class="info">
+                                <input type="password" name="old_password" placeholder= "Old Password" id="old_password" required>
+                                <div id="old_password_feedback" class="feedback"></div>
+                            </div>
+                            <div class="info">
+                                <input type="password" name="password" placeholder="New Password" id="password" required>
+                            </div>
+    
+                            <div class="info">
+                                <input type="password" name="confirm_password" placeholder="Confirm Password" id="confirm_password" required>
+                                <div id="password_feedback" class="feedback"></div>
+                            </div>
+                        </div>
+                        <div class="submit-btn">
+                            
+                            <input type="hidden" name="process_type" value="change_password">
+                            {% csrf_token %}
+                            <button type="submit">Update</button>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+            <!----------------------->
+
+            <!----------------------->
+            <div class="option">
+                <div class="heading" onclick="bottom_open(3)">
+                    <p>Security and Privacy</p>
+                    <p><i class="fas fa-chevron-right"></i></p>
+                </div>
+                <div class="bottom" style="display:none;" id="bottom-3">
+                    <div class="group" style="width:100%;display:flex;justify-content:space-between;">
+                        <p style="margin-top:3px;font-size:17px;">Private Account</p>
+                        <label class="switch">
+                            <input type="checkbox" {% if private %} checked {% endif %} onclick="privateHandler()">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="group" style="width:100%;display:flex;justify-content:space-between;margin-top:15px;">
+                        <p style="margin-top:3px;font-size:17px;padding:3px;">Temporarily disable my account</p>
+                        <label class="switch">
+                            <input type="checkbox" {% if disabled %} checked {% endif %} onclick="disableHandler()">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="group" style="width:100%;display:flex;justify-content:space-between;margin-top:15px;">
+                        <p style="margin-top:3px;font-size:17px;">Delete my account</p>
+                        <button style="background-color:#dc3545;padding:8px;font-size:17px;border:none;color:#fff;cursor:pointer" onclick="document.getElementById('delete-confirmation').style.display = 'flex'">Delete</button>
+                    </div>
+                </div>
+            </div>
+            <!----------------------->
+            
+        </div>
+    </div>
+
+    <script>
+
+        function privateHandler(){
+            $.ajax({
+                type: "POST",
+                url: "/user_authentication/settings/",
+                async: true,
+                headers: { 'X-CSRFToken': csrftoken },
+                data: {'process_type':'private'},
+            });
+        }
+
+        function disableHandler(){
+            $.ajax({
+                type: "POST",
+                url: "/user_authentication/settings/",
+                async: true,
+                headers: { 'X-CSRFToken': csrftoken },
+                data: {'process_type':'disable'},
+            });
+        }
+
+        function changeimage(){
+            var element = document.getElementById('profile-image-changer')
+            var pimg = document.getElementById('pimg')
+            pimg.src = window.URL.createObjectURL(element.files[0])
+        }
+
+        function changeProfile(){
+            var success_toast = document.getElementById('success-toast')
+            var form = document.getElementById('profile-form')
+            success_toast.innerHTML = "Your profile has been updated."
+            
+            var fd = new FormData(form);
+            var loading = document.getElementById('loading');
+
+            $.ajax({
+                type: "POST",
+                url: "/user_authentication/settings/",
+                async: true,
+                headers: { 'X-CSRFToken': csrftoken },
+                data: fd,
+                processData: false,
+                contentType: false,
+                beforeSend: function(){
+                    loading.style.display = "flex";
+                },
+
+                complete: function(){
+                    loading.style.display = "none";
+                },
+
+                success: function (text) {
+                    success_toast.style.display = "block"
+                    setTimeout(function(){
+                        success_toast.style.display = "none"
+                    }, 3000);    
+                }
+            });
+
+             
+        }
+
+        function changePassword(){
+            var success_toast = document.getElementById('success-toast')
+            var form = document.getElementById('password_change_form')
+            success_toast.innerHTML = "Your password has been updated."
+
+            var old_password = document.getElementById('old_password')
+            var password = document.getElementById('password')
+            var confirm_password = document.getElementById('confirm_password')
+
+            var old_password_feedback = document.getElementById('old_password_feedback')
+            var password_feedback = document.getElementById('password_feedback')
+
+            var fd = new FormData(form);
+
+            $.ajax({
+                type: "POST",
+                url: "/user_authentication/settings/",
+                async: true,
+                headers: { 'X-CSRFToken': csrftoken },
+                data: fd,
+                processData: false,
+                contentType: false,
+                beforeSend: function(){
+                    loading.style.display = "flex";
+                },
+
+                complete: function(){
+                    loading.style.display = "none";
+                },
+
+                success: function (response) {
+                    old_password.style.border = "solid 1px #dadada"
+                    old_password_feedback.style.display = "none"
+                    password.style.border = "solid 1px #dadada"
+                    confirm_password.style.border = "solid 1px #dadada"
+                    password_feedback.style.display = "none"
+
+
+                    if(response.status === 200){
+                        success_toast.style.display = "block"
+                        setTimeout(function(){
+                            success_toast.style.display = "none"
+                            location.reload()
+                        }, 3000);
+
+                        
+
+                    }else if(response.status === 400){
+                        if(response.error_tag === "old_password"){
+                            old_password.style.border = "solid 1px #dc3545"
+                            old_password_feedback.style.display = "block";
+                            old_password_feedback.innerHTML = "*" + response.error
+                        }
+
+
+                        if(response.error_tag === "password"){
+                            password.style.border = "solid 1px #dc3545"
+                            confirm_password.style.border = "solid 1px #dc3545"
+                            password_feedback.innerHTML = "*" + response.error
+                            password_feedback.style.display = "block";
+                        }
+
+                    }
+                       
+                }
+            });
+
+            
+        }
+
+
+        function bottom_open(value){
+            element = document.getElementById(`bottom-${value}`)
+            style = element.style.display
+            if(style == "none"){
+                element.style.display = "flex"
+            }else{
+                element.style.display = "none"
+            }
+
+            
+        }
+
+        function deleteAccount(action){
+            if(!action){
+                var conf = document.getElementById('delete-confirmation')
+                conf.style.display = "none";
+                return
+            }
+            var element = document.getElementById('delete_account_field')
+            var delete_feedback = document.getElementById('delete-feedback')
+            value = element.value
+            var success_toast = document.getElementById('success-toast')
+            success_toast.innerHTML = "Your account is successfully deleted!"
+            success_toast.style.zIndex = "600";
+            
+
+            if(value === null || value === ''){
+                delete_feedback.innerHTML = "*Enter password to continue!"
+                element.style.borderColor = "#dc3545"
+                delete_feedback.style.display = "block"
+                return;
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: "/user_authentication/settings/",
+                async: true,
+                headers: { 'X-CSRFToken': csrftoken },
+                data: {password:value,process_type:'delete_account'},
+                beforeSend: function(){
+                    loading.style.display = "flex";
+                },
+
+                complete: function(){
+                    loading.style.display = "none";
+                },
+
+                success: function (response) {
+                    if(response.status === 400){
+                        delete_feedback.innerHTML = "*Invalid password!"
+                        element.style.borderColor = "#dc3545"
+                        delete_feedback.style.display = "block"
+                        
+                    }else{
+                        delete_feedback.innerHTML = "*Invalid password!"
+                        element.style.borderColor = "#818181"
+                        delete_feedback.style.display = "none"
+
+                        success_toast.style.display = "block"
+                        setTimeout(function(){
+                            success_toast.style.display = "none"
+                            location.reload()
+                        }, 3000);
+
+                        
+                    }
+
+                       
+                }
+            });
+
+
+        }
+
+    </script>
 {% endblock %}

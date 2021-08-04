@@ -29,7 +29,7 @@ DEBUG = False
 if DEBUG == True:
     ALLOWED_HOSTS = ["192.168.1.23","127.0.0.1"]
 else:
-    ALLOWED_HOSTS = ["photoshare-parneet.herokuapp.com"]
+    ALLOWED_HOSTS = ["projectphotoshare.herokuapp.com"]
     
 
 # Application definition

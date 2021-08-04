@@ -14,3 +14,12 @@ class Likes(models.Model):
 
     def __str__(self):
         return "Like by: " + self.username
+
+class Comment(models.Model):
+    postid = models.IntegerField()
+    username = models.CharField(max_length=100)
+    comment = models.CharField(max_length=500)
+    time_sent = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "By: " + self.username

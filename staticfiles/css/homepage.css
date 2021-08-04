@@ -1,3 +1,98 @@
+/**** upload model ****/
+#upload-model{
+    position:absolute;
+    top:100px;
+    background-color: #fff;
+    width:400px;
+    min-height:250px;
+    border-radius:10px;
+    
+}
+
+#upload-model .model-body{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    width:400px;
+    min-height:250px;
+    margin-top:20px;
+}
+
+#upload-model .model-body .upload-buttons{
+    display: flex;
+    justify-content: center;
+    margin-top:20px;
+    align-items: center;
+}
+
+#upload-model .model-body .upload-buttons .submit button{
+    padding: 6px 12px;
+    font-size:17px;
+    outline:none;
+    border:solid 1px #dadada;
+    background-color: green;
+    color:#fff;
+    cursor:pointer;
+
+}
+
+.close{
+    position:absolute;
+    top:0;
+    right:0;
+    padding:20px;
+    font-size:20px;
+    cursor:pointer;
+    color:rgb(61, 61, 61);
+}
+
+.close:hover{
+    color:#000;
+}
+
+
+#upload-model .model-body .description-field textarea{
+    width:250px;
+    height:50px;
+    resize: none;
+    outline:none;
+    margin-top:30px;
+    font-size:18px;
+    padding:10px;
+    border-radius: 10px;;
+}
+
+input[type="file"] {
+    display: none;
+    
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-right:10px;
+    
+}
+
+
+@media screen and (max-width:500px){
+    #upload-model{
+        width:320px;   
+    }
+    
+    #upload-model .model-body{
+        width:320px;
+    }
+}
+
+@media screen and (max-width:350px){
+    
+}
+
+
+
+
 
 /**** homepage ***/
 
@@ -32,6 +127,7 @@
     line-height: 10px;
     color:#727272;
 }
+
 
 .profile-section .setting{
     margin:5px;
@@ -79,6 +175,7 @@
     padding:10px 83px;
 }
 
+
 .right-btn-container a:hover{
     background-color:#1a6cd6;
     cursor:pointer;
@@ -106,11 +203,8 @@
 }
 
 .right-info-container .friend-request .number{
-    background-color:red;
-    padding:2px 4px;
+    color:red;
     border-radius: 999px;
-    color:#fff;
-    width:20px;
     text-align:center;
     justify-content: center;
 }
@@ -132,6 +226,7 @@
     max-width: 500px;
     margin:30px auto;
 }
+
 
 .image-section .image-header{
     background-color: #fff;
@@ -157,6 +252,8 @@
 
 .image-header h3{
     margin-left:20px;
+    font-size:16px;
+    cursor:pointer;
 }
 
 .image-header .profile-image{
@@ -170,9 +267,9 @@
     width:600px;
     object-fit: cover;
     cursor:pointer;*/
-    max-width: 100%;
-        max-height: 100%;
-        display: block; /* remove extra space below image */
+    display:block;
+    width:500px;
+
 }
 
 .image-bottom .icon{
@@ -199,7 +296,317 @@
     display:grid;
 }
 
+.image-header{
+    width:480px;
+}
+.image-bottom{
+    width:480px;
+}
 
+.image-options{
+    position:absolute;
+    right:0px;
+    font-size:20px;
+    cursor:pointer;
+    padding:10px;
+    top:0;
+}
+
+.image-options::selection {
+    color: none;
+    background: none;
+}
+/* For Mozilla Firefox */
+.image-options::-moz-selection {
+    color: none;
+    background: none;
+}
+
+.options{
+    position:absolute;
+    top:40px;
+    right:0;
+    padding:10px;
+    background-color:#fff;
+    width:160px;
+    display:flex;
+    flex-direction: column;
+    align-items: center; 
+    border-radius:5px;
+    box-shadow: 9px 5px 33px -6px rgba(0,0,0,0.77);
+    -webkit-box-shadow: 9px 5px 33px -6px rgba(0,0,0,0.77);
+    -moz-box-shadow: 9px 5px 33px -6px rgba(0,0,0,0.77);
+}
+
+.post-description{
+    background-color: #fff;
+    padding:10px;
+    font-size:17px;
+}
+
+
+.options .opt{
+    /*border-bottom:solid 1px #dadada;*/
+    width:100%;
+    font-weight:bold;
+    font-size:16px;
+    padding:10px 8px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.options .opt:hover{
+    background-color:#dadada;
+
+}
+
+.options .opt:last-child{
+    border-bottom:none;
+    
+}
+
+.blur-background{
+    position:fixed;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    background-color: rgba(0,0,0,.7);
+    display:flex;
+    justify-content: center;
+    z-index:100;
+}
+
+.delete-confirmation{
+    background:rgba(0,0,0,0.2);
+    z-index:200px;
+    background-color:#fff;
+    position: absolute;
+    top:100px;
+    width:350px;
+    height:250px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    border:solid 1px #dadada;
+    box-shadow: 0px 2px 3px 4px rgba(0,0,0,0.2);
+    -webkit-box-shadow: -1px 4px 60px -12px rgba(0,0,0,0.54);
+    -moz-box-shadow: -1px 4px 60px -12px rgba(0,0,0,0.54);
+}
+
+.delete-confirmation h3{
+    margin:20px;
+    font-size:23px;
+}
+
+.delete-confirmation p{
+    color:#868484;
+    font-size:16px;
+}
+
+.delete-confirmation-buttons{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top:50px;
+    width:100%;
+}
+
+.delete-confirmation-buttons .btn-delete{
+    background:transparent;
+    border:none;
+    outline:none;
+    color:#2969df;
+    font-size:17px;
+    font-weight:bold;
+    border-bottom:1px solid #cacaca;
+    border-top:1px solid #cacaca;
+    width:100%;
+    padding:10px;
+    cursor:pointer;
+}
+
+.delete-confirmation-buttons .btn-dont-delete{
+    background:transparent;
+    border:none;
+    outline:none;
+    color:#000;
+    font-size:17px;
+    font-weight:bold;
+    width:100%;
+    padding:10px;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+.comment-section{
+    background-color: #fff;
+    overflow-x: auto;
+    max-height:400px;
+    padding:10px;
+    display:none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.comment-section .comment{
+    display:flex;
+    margin:10px;
+    
+}
+
+.comment-section  .comment  .profile img{
+    width:30px;
+    height:30px;
+    border-radius:999px;
+    object-fit: cover;
+}
+
+.comment-section .comment .comment-text{
+    margin-left:10px;
+    background-color:#ebebeb;
+    border-radius:10px;
+    padding:10px;
+}
+
+.comment-section .comment .comment-text .name{
+    cursor: pointer;
+    font-weight: bold;
+
+}
+
+.time-stamp{
+    color:rgb(93, 93, 93);
+    font-weight: normal;
+    margin-left:12px;
+    font-size:15px;
+}
+
+.comment-box{
+    display:flex;
+    justify-content: center;
+    position:relative;
+    
+}
+
+.comment-box input[type="text"]{
+    padding:8px 10px;
+    width:100%;
+    border:solid 1px #727272;
+    border-radius:20px;
+    outline:none;
+    font-size:17px;
+    margin-bottom:10px; 
+    padding-right:50px;
+    background-color: #fafafa;
+}
+
+.comment-box button{
+    position:absolute;
+    right:15px;
+    border:none;
+    background:none;
+    margin-top:8px;
+    font-size:20px;
+    cursor:pointer;
+    color:#727272;
+}
+.post-description p{
+    color:#686666;
+}
+
+.long-popup{
+    background-color:#fff;
+    position:absolute;
+    width:400px;
+    height:600px;
+    top:100px;
+    padding:16px;
+    border-radius:6px;  
+}
+
+.long-popup .heading{
+    background-color:#696969;
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:10px;
+    color:#fff;
+}
+
+.long-popup .heading .heading-text{
+    font-size:20px;
+}
+
+.long-popup .heading .icon{
+    cursor: pointer;
+}
+
+.long-popup .content{
+    margin-top:50px;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    overflow-x:hidden;
+    height:575px;
+    position:absolute;
+    top:-6px;
+    left:0;
+    right:0;
+}
+
+.long-popup .content .element{
+    margin:10px;
+    display:flex;
+    align-items: center;
+    width:88%;
+    justify-content: space-around;
+    background-color: #dadada;
+    padding:5px;
+    border-radius:6px;
+    cursor:pointer;
+    
+}
+
+.long-popup .content .element img{
+    width:50px;
+    height:50px;
+    border-radius:999px;
+    object-fit: cover;
+    cursor:pointer;
+}
+
+.long-popup .content .element p{
+    font-size:20px;
+    cursor:pointer;
+}
+
+
+
+
+
+/** MEDIA Queries ***/
 @media screen and (max-width: 1133px){
     #btns-grid{
         display:flex;
@@ -251,6 +658,14 @@
     .right-info-container{
         border-radius:0px;
     }
+    .comment-section{
+        width:400px;
+    }
+    .post-description{
+        width:400px;
+    }
+
+    
 }
 
 @media screen and (max-width: 900px){
@@ -260,6 +675,9 @@
     .image-bottom{
         width:auto;
     }
+    .post-description{
+        width:auto;
+    }
 
     .image-section img{
         width:100%;
@@ -267,6 +685,11 @@
     .image-section{
         margin-left:auto;
     }
+    .comment-section{
+        width:auto;
+    }
+
+    
 }
 
 @media screen and (max-width: 600px){
@@ -279,59 +702,15 @@
 
 }
 
-/**** Settings ****/
-.settings-container{
-    display:flex;
-    justify-content: space-around;
+@media screen and (max-width:967px) {
+    .right-btn-container .btn-container{
+        display:none
+    }
+
+    .right-info-container{
+        height:190px;
+    }
+
 }
 
-.settings-container .left-settings-profile{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    position:relative;
 
-    background-color:#fff;
-    padding:30px;
-}
-
-.settings-container .left-settings-profile img{
-    width:150px;
-    height:150px;
-    border-radius:999px;
-    object-fit: cover;
-    cursor:pointer;
-    border:solid 1px #dadada;
-}
-
-.settings-container .left-settings-profile:hover img{
-    opacity: 0.6;
-}
-
-.settings-container .left-settings-profile:hover button{
-    display:block;
-}
-
-.settings-container .left-settings-profile button{
-    position:absolute;
-    top:45%;
-    left:20%;
-    cursor:pointer;
-    background-color: transparent;
-    border:none;
-    color:#0064c2;
-    font-size:18px;
-    display:none;
-}
-
-.has-search .form-control-feedback {
-    position: absolute;
-    z-index: 2;
-    display: block;
-    width: 2.375rem;
-    height: 2.375rem;
-    line-height: 2.375rem;
-    text-align: center;
-    pointer-events: none;
-    color: #aaa;
-}

@@ -1,204 +1,435 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% include 'navbar.html' %}
-    <div class="home-body">
-        <div id="image-section">
-            <!--
-            <div class="image-section">
-                <div class="image-header">
-                    <img src="{{img}}" alt="profile_image" class="profile-image" />
-                    <h3>{{name}}</h3>
-                </div>
-                <img 
-                src="https://res.cloudinary.com/parneetsingh/image/upload/v1/{{post.image}}" 
-                alt="img">
-                <div class="image-bottom">
-                    <div class="icon"><i class="fa fa-heart"></i></div>
-                    <div class="icon"><i class="fa fa-heart-o"></i> {{ post.likes }}</div>
-                    <div class="icon icon-active"><i class="fa fa-comment-o"></i></div>
-                </div>
-            </div>
-            -->
-        </div>
-        
-        <div class="right-section">
-            <div class="profile-section">
-                <img src="{{img}}" alt="profile_image" class="profile-image" />
-                <div class="info">
-                    <span class="username">{{ username }}</span>
-                    <span class="name">{{name}}</span>
-                    <span class="setting">
-                        <a href="/user_authentication/logout/">Sign out</a>
-                    </span>
-                </div>
-            </div>
-            <div class="right-info-container">
-                <div class="posts">
-                    <span>Posts</span>
-                    <span class="number">{{total_posts}}</span>
-                </div>
-                <div class="followers clickable">
-                    <span>Followers</span>
-                    <span class="number">{{total_followers}}</span>
-                </div>
-                <div class="following clickable">
-                    <span>Following</span>
-                    <span class="number">{{total_followings}}</span>
-                </div>
-                {% if total_requests > 0 %}
-                    <div class="friend-request clickable" onclick="window.open('/friend_requests/','_self')">
-                        <span>Friend Requests</span>
-                        <span class="number">{{total_requests}}</span>
-                    </div>
-                    <style>
-                        .right-info-container{
-                            height:400px;
-                        }
+{% include 'navbar.html' %}
+<div class="home-body">
+    
+    <div id="image-section" style="margin-bottom:80px;">
 
-                        .following{
-                            border-bottom:1px solid rgb(216, 216, 216);
-                        }
-                    </style>
-                {% endif %}
-                <div id="btns-grid">
-                    <div class="right-btn-container">
-                        <div class="btn-container">
-                            <a href="/user_authentication/settings/" class="settings"><i class="fa fa-gear"></i> Settings</a>
-                        </div>
+    </div>
+
+    <div class="right-section">
+        <div class="profile-section">
+            <img src="{{img}}" alt="profile_image" class="profile-image" />
+            <div class="info">
+                <span class="username"><a href="/gallery/?u={{username}}" style="text-decoration:none;color:#000">{{ username }}</a></span>
+                <span class="name">{{name}}</span>
+                <span class="setting">
+                    <a href="/user_authentication/logout/">Sign out</a>
+                </span>
+            </div>
+        </div>
+        <div class="right-info-container">
+            <div class="posts clickable" onclick="window.open('/gallery/?u={{username}}','_self')">
+                <span>Posts</span>
+                <span class="number" id="total-posts">{{total_posts}}</span>
+            </div>
+            <div class="followers clickable" onclick="window.location.href='/add-friend/?type=followers'">
+                <span>Followers</span>
+                <span class="number">{{total_followers}}</span>
+            </div>
+            <div class="following clickable" onclick="window.location.href='/add-friend/?type=following'">
+                <span>Following</span>
+                <span class="number">{{total_followings}}</span>
+            </div>
+            {% if total_requests > 0 %}
+            <div class="friend-request clickable" onclick="window.open('/friend_requests/','_self')">
+                <span><i class="fas fa-user-friends"></i> Friend Requests</span>
+                <span class="number">{{total_requests}}</span>
+            </div>
+            <style>
+                .right-info-container {
+                    height: 450px;
+                }
+
+                .following {
+                    border-bottom: 1px solid rgb(216, 216, 216);
+                }
+
+                
+                @media  screen and (max-width:967px) {
+                    .right-info-container {
+                        height: 260px;
+                    }
+                }
+            </style>
+            {% endif %}
+            <div id="btns-grid">
+                <div class="right-btn-container">
+                    <div class="btn-container">
+                        <a href="/user_authentication/settings/" class="settings"><i class="fa fa-gear"></i>
+                            Settings</a>
                     </div>
-                    <div class="right-btn-container">
-                        <div class="btn-container">
-                            <form action="" method="POST" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <input type="file" onchange="form.submit()"  id="selectedFile" style="display: none;" name="image" />
-                                <a onclick="document.getElementById('selectedFile').click();" class="select-image"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> Create a post</i></a>
-                            </form>
-                        </div>
+                </div>
+                <div class="right-btn-container">
+                    <div class="btn-container">
+                            <a onclick="document.getElementById('blur-background-upload').style.display = 'flex'" class="select-image"><i
+                                    class="fa fa-sticky-note-o" aria-hidden="true"></i> Create a post</i></a>
                     </div>
                 </div>
             </div>
-            
         </div>
-        
+
     </div>
-    <script>
-        if ( window.history.replaceState ) {
-          window.history.replaceState( null, null, window.location.href );
+    <div class="blur-background" id="delete-confirmation" style="display:none;">
+        <div class="delete-confirmation">
+            <h3>Confirm Deletion</h3>
+            <p>Delete this post?</p>
+            <div class="delete-confirmation-buttons">
+                <button class="btn-delete" onclick="deletePost(true)">Delete</button>
+                <button class="btn-dont-delete" onclick="deletePost(false)">Don't Delete</button>
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+<script>
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+    }
+
+    function likeButton(post_id) {
+        var heart = document.getElementById(`icon-${post_id}`)
+        if (heart.classList['value'] == 'fa fa-heart') {
+            heart.classList = ['fa fa-heart-o'];
+        } else {
+            heart.classList = ['fa fa-heart'];
         }
 
-        function likeButton(post_id){
+        $.ajax({
+            type: "POST",
+            url: "/like_post/",
+            async: false,
+            headers: { 'X-CSRFToken': csrftoken },
+            data: { post_id: post_id },
+
+            success: function (text) {
+                //var heart = document.getElementById(`icon-${post_id}`)
+                var likes = document.getElementById(`likes-${post_id}`)
+                var likes_text = parseInt(likes.textContent)
+                if (heart.classList['value'] == 'fa fa-heart') {
+                    likes.innerHTML = (likes_text + 1).toString()
+                } else {
+                    likes.innerHTML = (likes_text - 1).toString()
+                }
+
+            }
+        });
+    }
+
+
+    var start = 0;
+    var end = 3;
+
+    var image_section = document.getElementById("image-section");
+
+
+    
+    var last = null;
+    
+
+    function send_comment(post_id){
+        field = document.getElementById(`comment-box-${post_id}`)
+        var element = document.getElementById(`comments-${post_id}`)
+        var t_comments = document.getElementById(`total-comment-${post_id}`)
+        
+        comment =`<div class="comment">
+                            <div class="profile">
+                                <img src="{{img}}" alt="profile image">
+                            </div>
+                            <div>
+                                <span class="time-stamp">1 second ago</span>
+                                <div class="comment-text">
+                                    <p class="name"><a href="/gallery/?u={{username}}" style="text-decoration:none;color:#000">{{name}}</p></p>
+                                    <p>${field.value}</p>
+                                </div>
+                            </div>
+                            
+                        </div>`
+        html = element.innerHTML
+        
+        
+        $.ajax({
+            type: "POST",
+            url: "/add-comment/",
+            async: false,
+            headers: { 'X-CSRFToken': csrftoken },
+            data: {comment:field.value,post_id:post_id},
+
+            success: function (text) {
+                element.innerHTML = comment + html
+                t_comments.innerHTML = (parseInt(t_comments.innerHTML) + 1).toString()
+            }
+        });
+
+
+
+
+        field.value = ""
+       // console.log(`comment-box-${res.post_id}`)
+    }
+
+    function showHideOptions(pid){
+        
+        var opt = document.getElementById(`options-${pid}`)
+        if(opt.style.display === "none"){
+            opt.style.display = "flex"
+        }else{
+            opt.style.display = "none"
+        }
+    }
+
+    var current_delete_id = null
+
+    function openDeleteConfirmation(pid){
+        var body = document.getElementById('body')
+        body.style.overflow = "hidden";
+        body.style.height = "100%"
+        var delete_confirmation = document.getElementById('delete-confirmation');
+        var options = document.getElementById(`options-${pid}`)
+        options.style.display = "none"
+        delete_confirmation.style.display = "flex"
+        current_delete_id = pid
+    }
+
+    function deletePost(status){
+        var delete_confirmation = document.getElementById('delete-confirmation');
+        var image_section = document.getElementById(`image-section-${current_delete_id}`)
+        var total_posts = document.getElementById('total-posts')
+        if(status === true){
+            image_section.style.display = "none"
+            total_posts.innerHTML = (parseInt(total_posts.innerHTML) - 1).toString()
             $.ajax({
                 type: "POST",
-                url: "/like_post/",
+                url: "/operations/",
                 async: false,
-                headers:{'X-CSRFToken': csrftoken},
-                data: {post_id:post_id},
-                
-                success: function(text) {
-                    var heart = document.getElementById(`icon-${post_id}`)
-                    var likes = document.getElementById(`likes-${post_id}`)
-                    var likes_text = parseInt(likes.textContent)
-                    if(heart.classList['value'] == 'fa fa-heart'){
-                        heart.classList = ['fa fa-heart-o'];
-                        likes.innerHTML = (likes_text - 1).toString()
-                    }else{
-                        heart.classList = ['fa fa-heart'];
-                        likes.innerHTML = (likes_text + 1).toString()
+                headers: { 'X-CSRFToken': csrftoken },
+                data: {post_id:current_delete_id,operation:'delete'},
+
+                success: function (res) {
+                    if(res.status == 200){
+                        var total_posts = document.getElementById('total-posts')
                     }
-                    
                 }
             });
         }
 
+        delete_confirmation.style.display = "none"
+        var body = document.getElementById('body')
+        body.style.overflow = "auto";
+    }
 
-        var start = 0;
-        var end = 3;
+    function getDisplayText(response) {
+        //console.log(`total-comment-${response[i].post_id}`)
+        var current_username = "{{request.user.username}}"
+        return `
+            <div class="image-section" style="position:relative" id="image-section-${response[i].post_id}">
+                <div class="image-header" style="position:relative">
+                    <img src="${response[i].profile_img}" alt="profile_image" class="profile-image" />
+                    <h3><a href="/gallery/?u=${response[i].username}" style="text-decoration:none;color:#000">${response[i].name}</a></h3>
 
-        var image_section = document.getElementById("image-section");
-        function getDisplayText(post_id,name,image,likes,profile_image,liked){
-            return `
-            <div class="image-section">
-                <div class="image-header">
-                    <img src="${profile_image}" alt="profile_image" class="profile-image" />
-                    <h3>${name}</h3>
+                    ${response[i].username === current_username ? `<span class="image-options" onclick="showHideOptions('${response[i].post_id}')"><i class="fa fa-ellipsis-v"></i></span>` : ''}
+                    
+                    
                 </div>
                 <img 
-                src="${image}" 
+                src="${response[i].image}" 
                 alt="img">
                 <div class="image-bottom">
                     <!--<div class="icon"><i class="fa fa-heart"></i></div>-->
-                    <div class="icon" onclick="likeButton('${post_id}')"><i class="${liked}" id='icon-${post_id}'></i> <span id="likes-${post_id}">${likes}</span> </div>
-                    <div class="icon icon-active"><i class="fa fa-comment-o"></i></div>
+                    <div class="icon" onclick="likeButton('${response[i].post_id}')"><i class="${response[i].liked}" id='icon-${response[i].post_id}'></i> <span id="likes-${response[i].post_id}">${response[i].likes}</span> </div>
+                    ${
+                        response[i].commentDisable === false 
+                        
+                        ? `<div class="icon icon-active" onclick="showComments(${response[i].post_id})" id="icon-comment-${response[i].post_id}"><i class="fa fa-comment-o"></i> <span id="total-comment-${response[i].post_id}">${response[i].total_comments}</span></div>` :
+                        `<div class="icon" id="icon-comment-slash-${response[i].post_id}"><i class='fas fa-comment-slash'></i></div>`
+                    }
+                    <div class="icon icon-active" onclick="showComments(${response[i].post_id})" id="icon-comment-${response[i].post_id}" style="display:none;"><i class="fa fa-comment-o"></i> <span id="total-comment-${response[i].post_id}">${response[i].total_comments}</span></div>
+                    <div class="icon" id="icon-comment-slash-${response[i].post_id}" style="display:none"><i class='fas fa-comment-slash'></i></div>
+                    
                 </div>
+                ${
+                    response[i].description !== '' ?  `
+                        <div class="post-description">
+                            <p><b>${response[i].name}:</b> <span class="dec-text">${response[i].description}</span></p>
+                        </div>
+                    ` : ``
+                }
+                
+                <div class="comment-section" id="comment-section-${response[i].post_id}">
+                    <form class="comment-box" onsubmit="event.preventDefault();send_comment('${response[i].post_id}')">
+                        <input type="text" placeholder="Write a comment..." class="myText" name="comment" id='comment-box-${response[i].post_id}' required>
+                        {% csrf_token %}
+                        <button type="submit"><i class="fa fa-paper-plane"></i></button>
+                    </form>
+                    <div id="comments-${response[i].post_id}">
+                        ${response[i].commentDisable === false ? createComments(response[i].post_id) : ''}
+                    </div>
+                    
+                </div>
+                <div class="options" id="options-${response[i].post_id}" style="display:none">
+                    <div class="opt" onclick="openDeleteConfirmation('${response[i].post_id}')">Delete Post</div>
+                    <div class="opt" onclick="toggleComment(${response[i].post_id},${response[i].commentDisable})" id='comment-turn-onoff-${response[i].post_id}'>
+                        ${response[i].commentDisable === false ? 'Turn off comments': 'Turn on comments'}
+                    </div>
+                </div>
+                
             </div>
             `
+    }
+    var last_current = null
+    function toggleComment(pid,current){
+        if(last_current === null) last_current = current
+
+        var options = document.getElementById(`options-${pid}`);
+        options.style.display = "none"
+
+        var comment_icon = document.getElementById(`icon-comment-${pid}`)
+        var comment_slash_icon = document.getElementById(`icon-comment-slash-${pid}`)
+        var comments = document.getElementById(`comments-${pid}`)
+        var comments_section = document.getElementById(`comment-section-${pid}`)
+        var comment_turn_onoff = document.getElementById(`comment-turn-onoff-${pid}`)
+
+        $.ajax({
+            type: "POST",
+            url: "/operations/",
+            async: false,
+            headers: { 'X-CSRFToken': csrftoken },
+            data: {post_id:pid,operation:'toggle_comment',current:last_current},
+
+            success: function (res) {
+                if(res.status == 200){
+                    if(last_current === false){
+                        comment_icon.style.display = "none";
+                        comment_slash_icon.style.display = "block";
+                        comments.innerHTML = ''
+                        comments_section.style.display = "none"
+                        comment_turn_onoff.innerHTML = "Turn on comments"
+                    }else{
+                        comment_icon.style.display = "block";
+                        comment_slash_icon.style.display = "none";
+                        comments.innerHTML = createComments(pid)
+                        comments_section.style.display = "block"
+                        comment_turn_onoff.innerHTML = "Turn off comments"
+                    }
+                }
+
+                last_current = !last_current
+            }
+        });
+    }
+
+    function showComments(post_id){
+        var post_section = document.getElementById(`comment-section-${post_id}`);
+        if(last === post_section){
+            post_section.style.display = "none";
+            last = null;
+            return
+        }else if(last !== null){
+            last.style.display = "none"
         }
 
-        $(document).ready(function() { 
+        last = post_section
+
+        if(post_section.style.display !== "block"){
+            post_section.style.display = "block";
+        }else{
+            post_section.style.display = "none";
+        }
+    }
+
+    var createComments = (pid) => {
+        comments = ``
+        $.ajax({
+            type: "POST",
+            url: "/get-comments/",
+            async: false,
+            headers: { 'X-CSRFToken': csrftoken },
+            data: {post_id:pid},
+
+            success: function (com) {
+                for(c = 0; c < com.length; c++){
+                    if(!com[c].disabled){
+                        comments += `<div class="comment">
+                            <div class="profile">
+                                <img src="${com[c].profile_image}" alt="profile image">
+                            </div>
+                            <div>
+                                <span class="time-stamp">${com[c].ago}</span>
+                                <div class="comment-text">
+                                    <p class="name"><a href="/gallery/?u=${com[c].username}" style="text-decoration:none;color:#000">${com[c].first_name} ${com[c].last_name}</a> </p>
+                                    <p>${com[c].comment}</p>
+                                </div>
+                            </div>
+                            
+                        </div>`
+                    }
+                    
+                }
+
+                
+            }
+        });
+        
+        return comments
+    }
+
+    $(document).ready(function () {
+        var response = '';
+        $.ajax({
+            type: "POST",
+            url: "/post_data/",
+            async: false,
+            headers: { 'X-CSRFToken': csrftoken },
+            data: {},
+
+            success: function (text) {
+                response = text.slice(start, end);
+                for (i = 0; i < response.length; i++) {
+                    text =  getDisplayText(response)
+                    image_section.innerHTML += text
+                }
+
+                start = end
+                end = end + 3
+            }
+        });
+    });
+
+
+    $(window).scroll(onScroll);
+    //$('body').on('touchmove', onScroll);
+    document.body.addEventListener("touchstart", onScroll);
+    document.body.addEventListener("touchend", onScroll);
+    document.body.addEventListener("touchmove", onScroll);
+    function onScroll() {
+        //if (e.target.nodeName == 'CANVAS') { e.preventDefault(); }
+        var diff = -((Math.floor($(window).scrollTop())) - (Math.floor($(document).height() - $(window).height())))
+        //console.log(Math.floor( $(window).scrollTop() ))
+        //console.log($(document).height() - $(window).height())
+        if (diff <= 100 && diff >= 0) {
             var response = '';
-            console.log($(document).height() - $(window).height())
             $.ajax({
                 type: "POST",
                 url: "/post_data/",
                 async: false,
-                headers:{'X-CSRFToken': csrftoken},
+                headers: { 'X-CSRFToken': csrftoken },
                 data: {},
-                
-                success: function(text) {
-                    response = text.slice(start,end);
-                    //console.log(response)
-                    for(i = 0; i < response.length;i ++){
-                        image_section.innerHTML += getDisplayText(
-                            response[i].post_id,
-                            response[i].name,
-                            response[i].image,
-                            response[i].likes,
-                            response[i].profile_img,
-                            response[i].liked
-                        )
+                success: function (text) {
+                    response = text.slice(start, end);
+                    for (i = 0; i < response.length; i++) {
+                        text =  getDisplayText(response)
+                        image_section.innerHTML += text
                     }
-                    
-                    start = end
-                    end = end + 3
-                }
-            });
-        });
 
-        
-        $(window).scroll(onScroll);
-        $('body').on('touchmove', onScroll);
-        function onScroll() {
-            var diff = -((Math.floor( $(window).scrollTop())) - (Math.floor( $(document).height() - $(window).height() )))
-            //console.log(Math.floor( $(window).scrollTop() ))
-            console.log(diff)
-            if(diff <= 300) {
-                var response = '';
-                $.ajax({
-                type: "POST",
-                url: "/post_data/",
-                async: false,
-                headers:{'X-CSRFToken': csrftoken},
-                data: {},
-                success: function(text) {
-                    response = text.slice(start,end);
-                    console.log(response)
-                    for(i = 0; i < response.length;i ++){
-                        image_section.innerHTML += getDisplayText(
-                            response[i].post_id,
-                            response[i].name,
-                            response[i].image,
-                            response[i].likes,
-                            response[i].profile_img,
-                            response[i].liked
-                        )
-                    }
-                    
                     start = end
                     end = end + 3
                 }
             });
-                
-            }
+
         }
-        </script>
+    }
+
+    
+</script>
 {% endblock %}

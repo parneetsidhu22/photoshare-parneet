@@ -5,27 +5,106 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable = no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css">
     <link rel=icon href="{% static 'images/logo.png' %}" sizes="16x16" type="image/png">
 
 
     <!-- CSS only -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/homepage.css' %}"> 
+    
     <link rel="stylesheet" href="{% static 'css/login.css' %}"> 
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}"> 
     <link rel="stylesheet" href="{% static 'css/register.css' %}"> 
     <link rel="stylesheet" href="{% static 'css/friend.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/homepage.css' %}"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.css" integrity="sha512-vEia6TQGr3FqC6h55/NdU3QSM5XR6HSl5fW71QTKrgeER98LIMGwymBVM867C1XHIkYD9nMTfWK2A0xcodKHNA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>PhotoShare</title>
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </head>
-<body>
+<body id="body">
+    <style>
+        #loader {
+          border: 10px solid #f3f3f3;
+          border-radius: 50%;
+          border-top: 10px solid #3498db;
+          width: 60px;
+          height: 60px;
+          -webkit-animation: spin 2s linear infinite; /* Safari */
+          animation: spin 2s linear infinite;
+          margin-top:15%;
+          z-index:400;
+        }
+        
+        /* Safari */
+        @-webkit-keyframes spin {
+          0% { -webkit-transform: rotate(0deg); }
+          100% { -webkit-transform: rotate(360deg); }
+        }
+        
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+    </style>
+    <div class="blur-background" id='loading' style="display:none;z-index:400;">
+        <div id="loader" style="z-index:500;">
 
+        </div>
+    </div>
+    
+
+
+    <div class="blur-background" id="blur-background-upload" style="display:none">
+        <div id="upload-model">
+            <div class="close" onclick="document.getElementById('blur-background-upload').style.display = 'none'"><i class="fas fa-times"></i></div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                <div class="model-body">
+                    <div class="upload-header">
+                        <h2>Upload a post</h2>
+                    </div>
+                    <div class="description-field">
+                        <textarea placeholder="Description" name="description"></textarea>
+                    </div>
+                    <div class="upload-buttons">
+                        <div class="file-upload-btn">
+                            <label class="file">
+                                <span class="file-custom"></span>
+                            </label>
+                            <label for="file-upload" class="custom-file-upload">
+                                <i class="fa fa-cloud-upload"></i> Upload Image
+                            </label>
+                            <input type="file" id="file-upload" name="image" accept="image/*" class="image-selector" required>
+                        </div>
+                        <div class="submit">
+                            {% csrf_token %}
+                            <button type="submit">Submit <i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </form>
+            
+        </div>
+    </div>
     {% block content %}
     {% endblock %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+        function file_changed(){
+            var element = document.getElementById('file-upload')
+            files = element.files
+            file_name = ''
+            if(files.length > 0){
+                file_name = files[0].name
+                document.getElementById('upload_file_text').innerHtml = "Hello world"
+                console.log(document.getElementById('upload_file_text').innerHtml)
+            }else{
+                
+            }
+        }
+
         function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -44,6 +123,27 @@
         
         const csrftoken = getCookie('csrftoken');
     </script>
-    
+    {% if user.is_authenticated %}
+    <div class="mobile-footer">
+        <div class="icon {% if page_type == 'home' %} active-mobile-btn {% endif %}">
+            <a href='/'><i class="fas fa-home"></i></a>
+        </div>
+        <div class="icon {% if page_type == 'settings' %} active-mobile-btn {% endif %}" >
+            <a href='/user_authentication/settings/'><i class="fas fa-cog"></i></a>
+        </div>
+        <div class="icon" onclick="document.getElementById('blur-background-upload').style.display = 'flex'">
+            <i class="fas fa-plus-square"></i>
+        </div>
+        <div class="icon {% if page_type == 'gallery' %} active-mobile-btn {% endif %}">
+            <a href="/gallery/"><i class="fas fa-user"></i></a>
+        </div>
+        <div class="icon" onclick="location.reload();">
+            <i class="fas fa-redo-alt"></i>
+        </div>
+    </div>
+    {% endif %}
+
+<script src="https://kit.fontawesome.com/b631d41d31.js" crossorigin="anonymous"></script>
+
 </body>
 </html>
